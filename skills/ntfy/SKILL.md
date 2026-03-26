@@ -76,7 +76,7 @@ After the task completes (whether it succeeded or failed), send the notification
 **Compose the notification:**
 
 - **Title**: The specific task name (e.g. "Run test suite", "Refactor auth module"). Use the user's own words when possible.
-- **Message**: `<task name> is completed, please continue.` on success, or `<task name> failed, please check.` on failure. Keep it short — this is a ping, not a report.
+- **Message**: A concise summary (max 200 characters) describing the result of the task and what work was completed. On failure, describe what failed and why. Focus on outcomes, not process.
 - **Priority**: normal by default, urgent only when the user explicitly requests it.
 
 **Send the notification** by following the curl command in the appropriate reference file:
