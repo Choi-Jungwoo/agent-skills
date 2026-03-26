@@ -1,12 +1,13 @@
 ---
-name: mt5api:docs
+name: mt5api
 description: >
   Complete API reference for the mt5api.dll (.NET wrapper for MetaTrader 5).
-  This skill MUST be referenced automatically whenever the user works with
-  MT5 API types, trading operations, order execution, symbol data, account
-  management, or any code that touches the mtapi.mt5 namespace. Also use it
-  when the user asks about available MT5 methods, enums, events, or data
-  structures — even if they don't explicitly say "mt5api".
+  This skill MUST be referenced automatically whenever the user invokes
+  `/mt5api`, works with MT5 API types, trading operations, order execution,
+  symbol data, account management, or any code that touches the
+  mtapi.mt5 namespace. Also use it when the user asks about available MT5
+  methods, enums, events, or data structures — even if they don't explicitly
+  say "mt5api".
 ---
 
 # mt5api.dll API Reference
