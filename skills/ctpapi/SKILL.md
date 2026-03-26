@@ -6,7 +6,10 @@ description: >
   APIs, trader APIs, SPI callbacks, request and response structures, field
   definitions, login and session flow, order and quote flow, bank-futures
   transfer APIs, query methods, risk and margin models, TGate access, or
-  exchange-specific CTP business rules.
+  exchange-specific CTP business rules. Also use it when the user works with
+  Python, .NET, Java, Rust, Go, or other wrapper libraries that bind to the
+  CTP runtime through the C ABI and needs the underlying native API behavior,
+  structures, callback flow, or field semantics.
 ---
 
 # CTP API documentation skill
@@ -14,7 +17,10 @@ description: >
 This skill provides a Markdown-only CTP reference corpus. The references are
 grouped by topic so you can load the smallest relevant file first and then
 answer from the structured English summaries, signatures, related symbols, and
-key types.
+key types. Treat the reference set as the native source of truth even when the
+user is working through a language-specific wrapper, because most wrapper
+questions still reduce to the same C ABI contracts, payload layouts, and
+callback ordering rules.
 
 | Topic | File | Read when |
 | --- | --- | --- |
