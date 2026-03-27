@@ -1,6 +1,6 @@
 ---
 name: ntfy
-description: Send a push notification via ntfy or Bark when work is complete. Use this skill whenever the user says "notify me", "alert me", "ping me when done", "/ntfy", or wants to be notified after a long-running task finishes. Also trigger when the user mentions ntfy, Bark, push notifications for task completion, or says things like "let me know when it's done" in the context of wanting an external notification. Supports normal and urgent priority levels via "/ntfy" (normal) and "/ntfy urgent".
+description: Push notification capability via ntfy or Bark. MUST use whenever the user's intent involves sending, receiving, or configuring notifications — including "notify me", "let me know", "alert me", "ping me", "remind me when done", "send a notification", or any request where the user wants to be informed about task completion, status changes, or events. Also triggers on mentions of ntfy, Bark, or push notifications. Supports normal and urgent priority.
 ---
 
 # Task Completion Notifier
