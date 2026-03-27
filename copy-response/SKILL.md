@@ -20,10 +20,10 @@ Whenever you are about to wait for user input, including:
 
 ## How to copy
 
-After composing your text response, run this Bash command:
+After composing your text response, locate this skill's bundled `scripts/copy-text.js` and pipe your response through it:
 
 ```
-cat <<'__COPY__' | node "$HOME/.claude/skills/copy-response/scripts/copy-text.js"
+cat <<'__COPY__' | node "<absolute-path-to-this-skill's-scripts/copy-text.js>"
 <your full response text here>
 __COPY__
 ```
