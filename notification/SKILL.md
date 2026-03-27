@@ -1,5 +1,5 @@
 ---
-name: ntfy
+name: notification
 description: Push notification capability via ntfy or Bark. MUST use whenever the user's intent involves sending, receiving, or configuring notifications — including "notify me", "let me know", "alert me", "ping me", "remind me when done", "send a notification", or any request where the user wants to be informed about task completion, status changes, or events. Also triggers on mentions of ntfy, Bark, or push notifications. Supports normal and urgent priority.
 ---
 
@@ -25,8 +25,8 @@ Parse the priority from the user's message or command arguments:
 
 | User input                          | Priority name | Behavior                                      |
 |-------------------------------------|---------------|-----------------------------------------------|
-| `/ntfy` or "normal" (default)       | normal        | Standard notification                         |
-| `/ntfy urgent` or "urgent"          | urgent        | Breakthrough / high-priority notification      |
+| `/notification` or "normal" (default)       | normal        | Standard notification                         |
+| `/notification urgent` or "urgent"          | urgent        | Breakthrough / high-priority notification      |
 
 If the user writes anything that clearly conveys urgency (e.g. "high priority", "important", "asap"), treat it as urgent.
 
