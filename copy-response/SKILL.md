@@ -23,7 +23,7 @@ Whenever you are about to wait for user input, including:
 After composing your text response, run this Bash command:
 
 ```
-cat <<'__COPY__' | node "~/.claude/skills/copy-response/scripts/copy-text.js"
+cat <<'__COPY__' | node "$HOME/.claude/skills/copy-response/scripts/copy-text.js"
 <your full response text here>
 __COPY__
 ```
