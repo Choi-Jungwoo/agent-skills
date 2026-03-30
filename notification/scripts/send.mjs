@@ -14,7 +14,16 @@ function getArg(name) {
 const provider = process.env.NTFY_URL ? "ntfy" : process.env.BARK_URL ? "bark" : null;
 
 if (!provider) {
-  console.error("Error: Neither NTFY_URL nor BARK_URL is set");
+  console.error(`Error: No notification service configured. Set at least one environment variable:
+
+  ntfy (cross-platform):
+    export NTFY_URL="https://ntfy.sh/your-topic"
+    export NTFY_TOKEN="tk_xxx"          # optional, for private servers
+
+  Bark (iOS):
+    export BARK_URL="https://api.day.app/your_device_key"
+
+Set these in your shell profile, .env, or Claude Code settings (env field in settings.json).`);
   process.exit(1);
 }
 
