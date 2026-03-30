@@ -1,53 +1,52 @@
 ---
 name: notification
-description: Send push notifications. MUST use when the user asks to send, receive, or configure notifications.
+description: Send push notifications. MUST use when the user asks to send, test, or configure notifications, or mentions "notify me", "ping me", "alert me", "let me know", or /notification.
 ---
 
-# Task Completion Notifier
+# Notification
 
-Send a push notification via [ntfy](https://ntfy.sh) or [Bark](https://github.com/Finb/Bark) when your current task is finished. Designed for long-running sessions where the user wants to step away and get pinged on their phone or desktop when work is done.
+Send push notifications via ntfy or Bark. Use this skill for **any** notification-related request — sending, testing, or configuring.
 
-## Priority Levels
+## Triggers
 
-Parse the priority from the user's message or command arguments:
+Activate when the user:
+- Uses `/notification` or asks to send/test a notification
+- Says "notify me", "ping me", "alert me", "let me know", "send a push notification"
+- Asks about notification setup, configuration, or troubleshooting
+- Requests to be alerted when a task completes
 
-| User input                          | Priority name | Behavior                                      |
-|-------------------------------------|---------------|-----------------------------------------------|
-| `/notification` or "normal" (default)       | normal        | Standard notification                         |
-| `/notification urgent` or "urgent"          | urgent        | Breakthrough / high-priority notification      |
+## Priority
 
-If the user writes anything that clearly conveys urgency (e.g. "high priority", "important", "asap"), treat it as urgent.
+| User signal | `--priority` | `--tags` |
+|---|---|---|
+| Default / "normal" / no signal | `3` | `white_check_mark` (success) or `x` (failure) |
+| "urgent" / "high priority" / "important" / "asap" | `5` | `white_check_mark` (success) or `x` (failure) |
+
+Choose `--tags` based on task outcome: `white_check_mark` if the task succeeded, `x` if it failed.
 
 ## Workflow
 
-### Step 1 — Complete the task
+1. **If there is a task**, complete it first — this skill adds a notification at the end.
+2. **Send the notification** using the command below. Do not skip this step even if the task failed. If the user only asked to send/test a notification (no preceding task), go directly to this step.
 
-Carry out whatever the user asked for. This skill does not alter your approach to the task itself — it only adds a notification at the end.
+### Compose fields
 
-### Step 2 — Send the notification
+- **`--title`**: The task or notification name in the user's own words (e.g. "Run test suite", "Refactor auth module", "Test notification").
+- **`--message`**: A concise summary (max 200 chars) of the outcome. On failure, state what failed and why. For standalone notifications, use the user's message.
+- **`--priority`** and **`--tags`**: See the table above.
 
-After the task completes (whether it succeeded or failed), send the notification using the resolved provider.
-
-**Compose the notification:**
-
-- **Title**: The specific task name (e.g. "Run test suite", "Refactor auth module"). Use the user's own words when possible.
-- **Message**: A concise summary (max 200 characters) describing the result of the task and what work was completed. On failure, describe what failed and why. Focus on outcomes, not process.
-- **Priority**: normal by default, urgent only when the user explicitly requests it.
-
-**Send the notification** using the `send.mjs` script in this skill's `scripts` directory:
+### Send command
 
 ```bash
 node "<skill-directory>/scripts/send.mjs" \
   --title "<title>" \
-  --message "<message body>" \
-  --priority <3 or 5> \
-  --tags "<white_check_mark or x>"
+  --message "<message>" \
+  --priority <3|5> \
+  --tags "<white_check_mark|x>"
 ```
 
-The script auto-detects the provider from environment variables and handles all configuration. If environment variables are missing, the script will exit with an error explaining how to configure a provider — relay that message to the user.
+## Failure handling
 
-
-### Failure handling
-
-- If **the script fails** (non-zero exit), mention to the user that the notification could not be sent — but do not let it block delivering the task result.
-- If the **task itself fails**, still send a notification with the failure indicator so the user knows to come check. The whole point is that the user might be AFK — a failure notification is just as valuable as a success one.
+- **Script fails** (non-zero exit): Tell the user the notification could not be sent, but still deliver the task result.
+- **Task fails**: Send the notification with `--tags x` so the user knows to check back. A failure notification is as valuable as a success one — the user may be AFK.
+- **Missing env vars**: The script prints setup instructions on error — relay them to the user.
