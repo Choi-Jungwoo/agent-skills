@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "skill-optimizer": {
+      "source": "mcollina/skills",
+      "sourceType": "github",
+      "computedHash": "7aa7e9bba558235dd145e1bdecf2952d0f3b2b03cf385884a2d59a2b4a4a1b91"
+    }
+  }
+}
