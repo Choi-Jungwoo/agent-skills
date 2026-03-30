@@ -23,33 +23,38 @@ Bark uses an `level` parameter (Apple's interruption levels) instead of numeric 
 
 ## Sending a Notification
 
-Use a POST request with a JSON body:
+Use the `send.mjs` script located alongside this reference directory. This script uses Node.js `fetch` to ensure correct UTF-8 encoding on all platforms (including Windows).
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}" \
-  -X POST "$BARK_URL" \
-  -H "Content-Type: application/json; charset=utf-8" \
-  -d '{
-    "title": "<title>",
-    "body": "<message body>",
-    "group": "claude-code",
-    "level": "<active or timeSensitive>",
-    "icon": "https://claude.ai/favicon.ico"
-  }'
+node "<skill-directory>/send.mjs" \
+  --title "<title>" \
+  --message "<message body>" \
+  --priority <3 or 5>
 ```
 
-### JSON Body Parameters
+> **Note:** Replace `<skill-directory>` with the absolute path to this skill's installation directory. The provider is auto-detected from the `BARK_URL` environment variable.
 
-| Field   | Required | Description                                                       |
-|---------|----------|-------------------------------------------------------------------|
-| `title` | No       | Notification title — use the task name from the user's words      |
-| `body`  | Yes      | Notification body text                                            |
-| `group` | No       | Groups notifications in the notification center (use `claude-code`) |
-| `level` | No       | Interruption level: `active` (default), `timeSensitive`, `passive`, `critical` |
-| `icon`  | No       | URL for a custom notification icon (iOS 15+)                      |
-| `sound` | No       | Sound name, e.g. `minuet`, `alarm`, `bell`, `chime`               |
-| `url`   | No       | URL to open when notification is tapped                           |
-| `badge` | No       | Number to display on the app icon badge                           |
+### Parameters
+
+| Parameter   | Required | Value                                    | Notes                                              |
+|-------------|----------|------------------------------------------|----------------------------------------------------|
+| `--title`   | No       | Task name from the user's words          |                                                    |
+| `--message` | Yes      | Notification body text                   |                                                    |
+| `--priority`| No       | `3` (normal) or `5` (urgent)             | `3` → `active`, `5` → `timeSensitive`             |
+
+The script reads `BARK_URL` from environment variables. The device key in the URL serves as authentication.
+
+### Bark-specific Features (manual use)
+
+These fields are supported by Bark but not exposed via `send.mjs` CLI flags. They are hardcoded with sensible defaults in the script:
+
+| Field   | Default in script | Description                                                       |
+|---------|-------------------|-------------------------------------------------------------------|
+| `group` | `claude-code`     | Groups notifications in the notification center                   |
+| `icon`  | Claude favicon    | URL for a custom notification icon (iOS 15+)                      |
+| `sound` | —                 | Sound name, e.g. `minuet`, `alarm`, `bell`, `chime`               |
+| `url`   | —                 | URL to open when notification is tapped                           |
+| `badge` | —                 | Number to display on the app icon badge                           |
 
 ### Success Check
 

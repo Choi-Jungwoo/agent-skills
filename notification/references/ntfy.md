@@ -18,26 +18,28 @@
 
 ## Sending a Notification
 
+Use the `send.mjs` script located alongside this reference directory. This script uses Node.js `fetch` to ensure correct UTF-8 encoding on all platforms (including Windows).
+
 ```bash
-curl -s -o /dev/null -w "%{http_code}" \
-  -H "Title: <title>" \
-  -H "Priority: <3 or 5>" \
-  -H "Tags: <white_check_mark or x>" \
-  ${NTFY_TOKEN:+-H "Authorization: Bearer $NTFY_TOKEN"} \
-  -d "<message body>" \
-  "$NTFY_URL"
+node "<skill-directory>/send.mjs" \
+  --title "<title>" \
+  --message "<message body>" \
+  --priority <3 or 5> \
+  --tags "<white_check_mark or x>"
 ```
 
-### Header Reference
+> **Note:** Replace `<skill-directory>` with the absolute path to this skill's installation directory. The provider is auto-detected from the `NTFY_URL` environment variable.
 
-| Header          | Value                                    | Notes                                              |
-|-----------------|------------------------------------------|----------------------------------------------------|
-| `Title`         | Task name from the user's words          |                                                    |
-| `Priority`      | `3` (normal) or `5` (urgent)             |                                                    |
-| `Tags`          | `white_check_mark` (success) / `x` (fail) | Renders as emoji in ntfy clients                 |
-| `Authorization` | `Bearer $NTFY_TOKEN`                     | Only include when `NTFY_TOKEN` is set              |
+### Parameters
 
-The `${NTFY_TOKEN:+...}` shell pattern conditionally includes the Authorization header only when the token is set, so public topics work without any auth configuration.
+| Parameter   | Required | Value                                    | Notes                                              |
+|-------------|----------|------------------------------------------|----------------------------------------------------|
+| `--title`   | No       | Task name from the user's words          |                                                    |
+| `--message` | Yes      | Notification body text                   |                                                    |
+| `--priority`| No       | `3` (normal) or `5` (urgent)             | Defaults to `3`                                    |
+| `--tags`    | No       | `white_check_mark` (success) / `x` (fail) | Renders as emoji in ntfy clients                 |
+
+The script reads `NTFY_URL` and optionally `NTFY_TOKEN` from environment variables. Public topics work without any auth configuration.
 
 ### Success Check
 

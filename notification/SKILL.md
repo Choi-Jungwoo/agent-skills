@@ -1,6 +1,6 @@
 ---
 name: notification
-description: Push notification capability via ntfy or Bark. MUST use whenever the user's intent involves sending, receiving, or configuring notifications — including "notify me", "let me know", "alert me", "ping me", "remind me when done", "send a notification", or any request where the user wants to be informed about task completion, status changes, or events. Also triggers on mentions of ntfy, Bark, or push notifications. Supports normal and urgent priority.
+description: Send push notifications via ntfy or Bark. MUST use when the user asks to send, receive, or configure notifications.
 ---
 
 # Task Completion Notifier
@@ -32,21 +32,15 @@ If the user writes anything that clearly conveys urgency (e.g. "high priority", 
 
 ## Workflow
 
-### Step 1 — Detect provider and validate configuration
+### Step 1 — Detect provider
 
 Determine the provider based on which URL environment variable is set. If both are set, prefer ntfy.
 
-**Validate:**
-
-```bash
-if [ -n "${NTFY_URL:-}" ]; then
-  PROVIDER="ntfy"
-elif [ -n "${BARK_URL:-}" ]; then
-  PROVIDER="bark"
-else
-  echo "Error: Neither NTFY_URL nor BARK_URL is set" >&2; exit 1
-fi
-```
+| Condition | Provider |
+|-----------|----------|
+| `NTFY_URL` is set | `ntfy` |
+| `BARK_URL` is set | `bark` |
+| Neither is set | Stop and tell the user to configure one (see below) |
 
 If neither URL is set, stop and tell the user:
 
@@ -79,12 +73,12 @@ After the task completes (whether it succeeded or failed), send the notification
 - **Message**: A concise summary (max 200 characters) describing the result of the task and what work was completed. On failure, describe what failed and why. Focus on outcomes, not process.
 - **Priority**: normal by default, urgent only when the user explicitly requests it.
 
-**Send the notification** by following the curl command in the appropriate reference file:
+**Send the notification** using the `send.mjs` script in this skill's directory. Read the appropriate reference file for the exact command and parameters:
 
-- **ntfy** → read `references/ntfy.md` for the curl command, headers, and tag mapping
-- **Bark** → read `references/bark.md` for the curl command, JSON body, and level mapping
+- **ntfy** → read `references/ntfy.md`
+- **Bark** → read `references/bark.md`
 
 ### Failure handling
 
-- If **curl fails** (non-zero exit or non-2xx status), mention to the user that the notification could not be sent — but do not let it block delivering the task result.
+- If **the script fails** (non-zero exit), mention to the user that the notification could not be sent — but do not let it block delivering the task result.
 - If the **task itself fails**, still send a notification with the failure indicator so the user knows to come check. The whole point is that the user might be AFK — a failure notification is just as valuable as a success one.
