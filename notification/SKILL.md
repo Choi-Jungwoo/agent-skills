@@ -5,7 +5,7 @@ description: Send push notifications. MUST use when the user asks to send, test,
 
 # Notification
 
-Send messages to mobile / desktop devices. Use this skill for **any** notification-related request — sending, testing, or configuring.
+Send messages to mobile / desktop devices. Use this skill for **any** notification-related request.
 
 ## Triggers
 
@@ -15,15 +15,6 @@ Activate when the user:
 - Asks about notification setup, configuration, or troubleshooting
 - Requests to be alerted when a task completes
 
-## Priority
-
-| User signal | `--priority` | `--tags` |
-|---|---|---|
-| Default / "normal" / no signal | `3` | `white_check_mark` (success) or `x` (failure) |
-| "urgent" / "high priority" / "important" / "asap" | `5` | `white_check_mark` (success) or `x` (failure) |
-
-Choose `--tags` based on task outcome: `white_check_mark` if the task succeeded, `x` if it failed.
-
 ## Workflow
 
 1. **If there is a task**, complete it first — this skill adds a notification at the end.
@@ -31,9 +22,12 @@ Choose `--tags` based on task outcome: `white_check_mark` if the task succeeded,
 
 ### Compose fields
 
-- **`--title`**: The task or notification name in the user's own words (e.g. "Run test suite", "Refactor auth module", "Test notification").
-- **`--message`**: A concise summary (max 200 chars) of the outcome. On failure, state what failed and why. For standalone notifications, use the user's message.
-- **`--priority`** and **`--tags`**: See the table above.
+| Field | Description |
+|---|---|
+| `--title` | The task or notification name in the user's own words (e.g. "Run test suite", "Test notification") |
+| `--message` | Concise outcome summary (max 200 chars). On failure, state what failed and why. |
+| `--urgent` | Add this flag when the user says "urgent", "important", "high priority", or "asap". Omit otherwise. |
+| `--successed` | Add this flag when the task succeeded. Omit on failure. |
 
 ### Send command
 
@@ -41,12 +35,12 @@ Choose `--tags` based on task outcome: `white_check_mark` if the task succeeded,
 node "<skill-directory>/scripts/send.mjs" \
   --title "<title>" \
   --message "<message>" \
-  --priority <3|5> \
-  --tags "<white_check_mark|x>"
+  [--urgent] \
+  [--successed]
 ```
 
 ## Failure handling
 
 - **Script fails** (non-zero exit): Tell the user the notification could not be sent, but still deliver the task result.
-- **Task fails**: Send the notification with `--tags x` so the user knows to check back. A failure notification is as valuable as a success one — the user may be AFK.
+- **Task fails**: Send the notification **without** `--successed` so the user knows to check back. A failure notification is as valuable as a success one — the user may be AFK.
 - **Missing env vars**: The script prints setup instructions on error — relay them to the user.

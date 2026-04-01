@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Usage: node send.mjs --title "..." --message "..." [--priority 3|5] [--tags "white_check_mark"]
+// Usage: node send.mjs --title "..." --message "..." [--urgent] [--successed]
 // Provider is auto-detected from environment variables (NTFY_URL or BARK_URL).
 
 const args = process.argv.slice(2);
@@ -8,6 +8,10 @@ const args = process.argv.slice(2);
 function getArg(name) {
   const idx = args.indexOf(`--${name}`);
   return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : undefined;
+}
+
+function hasFlag(name) {
+  return args.includes(`--${name}`);
 }
 
 // Collect all configured providers
@@ -31,8 +35,10 @@ Set these in your shell profile, .env, or Claude Code settings (env field in set
 
 const title = getArg("title") || "";
 const message = getArg("message") || "";
-const priority = getArg("priority") || "3";
-const tags = getArg("tags") || "white_check_mark";
+const urgent = hasFlag("urgent");
+const successed = hasFlag("successed");
+const priority = urgent ? "5" : "3";
+const tags = successed ? "white_check_mark" : "x";
 
 if (!message) {
   console.error("Error: --message is required");
