@@ -10,10 +10,12 @@ function getArg(name) {
   return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : undefined;
 }
 
-// Auto-detect provider from environment
-const provider = process.env.NTFY_URL ? "ntfy" : process.env.BARK_URL ? "bark" : null;
+// Collect all configured providers
+const providers = [];
+if (process.env.NTFY_URL) providers.push("ntfy");
+if (process.env.BARK_URL) providers.push("bark");
 
-if (!provider) {
+if (providers.length === 0) {
   console.error(`Error: No notification service configured. Set at least one environment variable:
 
   ntfy (cross-platform):
@@ -86,8 +88,13 @@ async function sendBark() {
   }
 }
 
-if (provider === "ntfy") {
-  await sendNtfy();
-} else {
-  await sendBark();
+// Send to all configured providers
+const results = await Promise.allSettled(
+  providers.map((p) => (p === "ntfy" ? sendNtfy() : sendBark()))
+);
+
+const failures = results.filter((r) => r.status === "rejected");
+if (failures.length > 0) {
+  for (const f of failures) console.error(f.reason);
+  process.exit(1);
 }

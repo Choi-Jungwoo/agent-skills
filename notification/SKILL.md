@@ -5,7 +5,7 @@ description: Send push notifications. MUST use when the user asks to send, test,
 
 # Notification
 
-Send push notifications via ntfy or Bark. Use this skill for **any** notification-related request — sending, testing, or configuring.
+Send messages to mobile devices. Use this skill for **any** notification-related request — sending, testing, or configuring.
 
 ## Triggers
 
